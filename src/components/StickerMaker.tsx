@@ -205,7 +205,7 @@ export const StickerMaker = () => {
               </Button>
               <Button
                 onClick={downloadSticker}
-                className="bg-gradient-primary hover:shadow-glow transition-all duration-300"
+                className="bg-primary text-primary-foreground"
               >
                 <Download className="w-4 h-4 mr-2" />
                 Download
