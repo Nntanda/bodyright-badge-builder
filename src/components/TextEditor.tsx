@@ -10,7 +10,8 @@ import {
   AlignLeft, 
   AlignCenter, 
   AlignRight,
-  Palette
+  Palette,
+  Type
 } from "lucide-react";
 
 interface TextEditorProps {
@@ -72,27 +73,37 @@ export const TextEditor = ({ activeObject, onUpdate }: TextEditorProps) => {
 
   if (!activeObject || activeObject.type !== "text") {
     return (
-      <Card className="p-4 bg-toolbar-bg border-border">
-        <h3 className="font-semibold mb-4 text-foreground">Properties</h3>
-        <p className="text-sm text-muted-foreground">Select a text element to edit properties</p>
+      <Card className="p-4 lg:p-6 bg-card border-border shadow-elegant">
+        <div className="flex items-center gap-2 mb-4">
+          <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
+            <Type className="w-4 h-4 text-white" />
+          </div>
+          <h3 className="font-semibold text-foreground">Text Properties</h3>
+        </div>
+        <p className="text-sm text-muted-foreground">Select a text element to edit its properties</p>
       </Card>
     );
   }
 
   const colorPresets = [
-    "#8b5cf6", // Primary purple
+    "#ff6b35", // Primary orange
     "#ffffff", // White
     "#000000", // Black
+    "#ff8c42", // Light orange
     "#ef4444", // Red
     "#10b981", // Green
     "#f59e0b", // Yellow
     "#3b82f6", // Blue
-    "#f97316", // Orange
   ];
 
   return (
-    <Card className="p-4 bg-toolbar-bg border-border">
-      <h3 className="font-semibold mb-4 text-foreground">Text Properties</h3>
+    <Card className="p-4 lg:p-6 bg-card border-border shadow-elegant">
+      <div className="flex items-center gap-2 mb-4">
+        <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
+          <Type className="w-4 h-4 text-white" />
+        </div>
+        <h3 className="font-semibold text-foreground">Text Properties</h3>
+      </div>
       
       <div className="space-y-4">
         {/* Text Content */}
