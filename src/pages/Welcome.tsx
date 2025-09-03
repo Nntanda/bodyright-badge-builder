@@ -20,7 +20,7 @@ const Welcome = () => {
               </div>
             </div>
             <Link to="/create">
-              <Button className="bg-gradient-primary hover:shadow-glow transition-all duration-300">
+              <Button className="bg-primary text-primary-foreground">
                 Get Started
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
@@ -51,7 +51,7 @@ const Welcome = () => {
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link to="/create">
-              <Button size="lg" className="bg-gradient-primary hover:shadow-glow transition-all duration-300 text-lg px-8">
+              <Button size="lg" className="bg-primary text-primary-foreground text-lg px-8">
                 Start Creating
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
@@ -95,45 +95,6 @@ const Welcome = () => {
           </Card>
         </div>
 
-        {/* How it Works */}
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-12">
-            How It Works
-          </h2>
-          
-          <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-            <div className="relative">
-              <div className="w-16 h-16 bg-gradient-primary rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-xl">
-                1
-              </div>
-              <h3 className="text-xl font-semibold mb-3">Upload Your Image</h3>
-              <p className="text-muted-foreground">
-                Choose any image as your sticker background
-              </p>
-            </div>
-            
-            <div className="relative">
-              <div className="w-16 h-16 bg-gradient-primary rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-xl">
-                2
-              </div>
-              <h3 className="text-xl font-semibold mb-3">Add Elements</h3>
-              <p className="text-muted-foreground">
-                Insert the Bodyright logo and customize your message
-              </p>
-            </div>
-            
-            <div className="relative">
-              <div className="w-16 h-16 bg-gradient-primary rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-xl">
-                3
-              </div>
-              <h3 className="text-xl font-semibold mb-3">Download Result</h3>
-              <p className="text-muted-foreground">
-                Export your finished sticker in high quality
-              </p>
-            </div>
-          </div>
-        </div>
-
         {/* CTA Section */}
         <Card className="p-8 md:p-12 text-center bg-gradient-primary/5 border-primary/20">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -144,7 +105,7 @@ const Welcome = () => {
             that drives digital rights across Africa.
           </p>
           <Link to="/create">
-            <Button size="lg" className="bg-gradient-primary hover:shadow-glow transition-all duration-300 text-lg px-8">
+            <Button size="lg" className="bg-primary text-primary-foreground text-lg px-8">
               Start Creating Now
               <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
