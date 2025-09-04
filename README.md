@@ -1,18 +1,12 @@
-# Welcome to your Lovable project
+# Welcome to MY Sticker React app
 
-## Project info
-
-**URL**: https://lovable.dev/projects/d3850195-c6a1-4e0a-b0d2-8005ade3fab0
+## Project inf
 
 ## How can I edit this code?
 
 There are several ways of editing your application.
 
-**Use Lovable**
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/d3850195-c6a1-4e0a-b0d2-8005ade3fab0) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
 
 **Use your preferred IDE**
 
