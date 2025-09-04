@@ -15,7 +15,7 @@ const Welcome = () => {
                 <Sparkles className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-foreground">Bodyright</h1>
+                <h1 className="text-xl font-bold text-foreground">AU-TFGBV</h1>
                 <p className="text-xs text-muted-foreground">Sticker Maker</p>
               </div>
             </div>
@@ -34,7 +34,7 @@ const Welcome = () => {
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 bg-gradient-primary/10 border border-primary/20 rounded-full px-4 py-2 mb-6">
             <Sparkles className="w-4 h-4 text-primary" />
-            <span className="text-sm font-medium text-primary">Bodyright Campaign Tool</span>
+            <span className="text-sm font-medium text-primary">Solemn Declaration on Gender Equality in Africa(SDGEA)</span>
           </div>
           
           <h1 className="text-4xl md:text-6xl font-bold mb-6">
@@ -117,7 +117,7 @@ const Welcome = () => {
       <footer className="border-t bg-secondary/50 py-8">
         <div className="container mx-auto px-4 text-center">
           <p className="text-muted-foreground">
-            © 2024 Bodyright Campaign. Empowering digital rights across Africa.
+            © 2024 AU-TFGBV. Empowering digital rights across Africa.
           </p>
         </div>
       </footer>
