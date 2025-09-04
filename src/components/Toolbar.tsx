@@ -1,9 +1,10 @@
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { 
   Upload, 
   Image, 
-  Type, 
+  MessageSquare, 
   Trash2,
   Sparkles
 } from "lucide-react";
@@ -11,19 +12,28 @@ import {
 interface ToolbarProps {
   onImageUpload: () => void;
   onAddLogo: () => void;
-  onAddText: () => void;
+  onMessageSelect: (message: string) => void;
   onDeleteSelected: () => void;
   hasActiveObject: boolean;
   hasBackgroundImage: boolean;
+  selectedMessage: string | null;
 }
+
+const messageOptions = [
+  "#No Excuse",
+  "#Stand we speak",
+  "#If Music has right,I too should",
+  "#My Photos,my rules"
+];
 
 export const Toolbar = ({
   onImageUpload,
   onAddLogo,
-  onAddText,
+  onMessageSelect,
   onDeleteSelected,
   hasActiveObject,
   hasBackgroundImage,
+  selectedMessage,
 }: ToolbarProps) => {
   return (
     <Card className="p-4 lg:p-6 bg-card border-border shadow-elegant">
@@ -71,17 +81,24 @@ export const Toolbar = ({
                 className="w-full justify-start hover:bg-tool-hover transition-colors"
               >
                 <Image className="w-4 h-4 mr-2" />
-                Add Bodyright Logo
+                Add AU-TFGBV Logo
               </Button>
 
-              <Button
-                onClick={onAddText}
-                variant="outline"
-                className="w-full justify-start hover:bg-tool-hover transition-colors"
-              >
-                <Type className="w-4 h-4 mr-2" />
-                Add Text Message
-              </Button>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-foreground">Choose Message</label>
+                <Select onValueChange={onMessageSelect} value={selectedMessage || ""}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select a campaign message" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {messageOptions.map((message) => (
+                      <SelectItem key={message} value={message}>
+                        {message}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </div>
         )}
@@ -111,10 +128,10 @@ export const Toolbar = ({
         <div className="pt-4 mt-4 border-t border-border">
           <div className="flex items-center gap-2 mb-3">
             <Sparkles className="w-5 h-5 text-primary" />
-            <span className="text-sm font-semibold text-primary">Bodyright Campaign</span>
+            <span className="text-sm font-semibold text-primary">AU-TFGBV Campaign</span>
           </div>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            Create powerful stickers to promote digital rights and connectivity across Africa.
+            Create powerful stickers for the AU-TFGBV campaign with selected messages and your logo.
           </p>
         </div>
       </div>

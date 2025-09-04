@@ -14,13 +14,15 @@ export const StickerMaker = () => {
   const [canvasHistory, setCanvasHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
   const [backgroundImage, setBackgroundImage] = useState<string | null>(null);
+  const [selectedMessage, setSelectedMessage] = useState<string | null>(null);
+  const [canvasSize, setCanvasSize] = useState({ width: 800, height: 600 });
 
   useEffect(() => {
     if (!canvasRef.current) return;
 
     const canvas = new FabricCanvas(canvasRef.current, {
-      width: 800,
-      height: 600,
+      width: canvasSize.width,
+      height: canvasSize.height,
       backgroundColor: "hsl(var(--canvas-bg))",
     });
 
@@ -37,7 +39,7 @@ export const StickerMaker = () => {
     return () => {
       canvas.dispose();
     };
-  }, []);
+  }, [canvasSize]);
 
   const saveCanvasState = useCallback((canvas: FabricCanvas) => {
     const state = JSON.stringify(canvas.toJSON());
@@ -81,18 +83,17 @@ export const StickerMaker = () => {
     reader.onload = (event) => {
       const img = new Image();
       img.onload = () => {
-        // Calculate scale to fit canvas while maintaining aspect ratio
-        const scale = Math.min(
-          fabricCanvas.width! / img.width,
-          fabricCanvas.height! / img.height
-        );
+        // Set canvas size to match image dimensions
+        const newSize = { width: img.width, height: img.height };
+        setCanvasSize(newSize);
+        
+        // Update fabric canvas dimensions
+        fabricCanvas.setDimensions(newSize);
 
         FabricImage.fromURL(event.target?.result as string).then((fabricImg) => {
           fabricImg.set({
-            scaleX: scale,
-            scaleY: scale,
-            left: (fabricCanvas.width! - img.width * scale) / 2,
-            top: (fabricCanvas.height! - img.height * scale) / 2,
+            left: 0,
+            top: 0,
             selectable: false,
             evented: false,
           });
@@ -126,22 +127,9 @@ export const StickerMaker = () => {
     });
   };
 
-  const addText = (text: string, options: any = {}) => {
-    if (!fabricCanvas) return;
-
-    const textObj = new FabricText(text, {
-      left: 100,
-      top: 100,
-      fontFamily: "Inter, sans-serif",
-      fontSize: 32,
-      fill: "hsl(var(--primary))",
-      fontWeight: "bold",
-      ...options,
-    });
-
-    fabricCanvas.add(textObj);
-    fabricCanvas.setActiveObject(textObj);
-    saveCanvasState(fabricCanvas);
+  const handleMessageSelect = (message: string) => {
+    setSelectedMessage(message);
+    toast.success("Message selected!");
   };
 
   const deleteSelected = () => {
@@ -155,18 +143,57 @@ export const StickerMaker = () => {
   const downloadSticker = () => {
     if (!fabricCanvas) return;
 
-    const dataURL = fabricCanvas.toDataURL({
-      format: "png",
-      quality: 1,
-      multiplier: 2,
-    });
+    // Create a temporary canvas with the card and border
+    const tempCanvas = document.createElement("canvas");
+    const ctx = tempCanvas.getContext("2d");
+    if (!ctx) return;
 
-    const link = document.createElement("a");
-    link.download = "bodyright-sticker.png";
-    link.href = dataURL;
-    link.click();
+    const padding = 20;
+    const messageHeight = selectedMessage ? 60 : 0;
+    const borderWidth = 4;
     
-    toast.success("Sticker downloaded successfully!");
+    tempCanvas.width = canvasSize.width + (padding * 2) + (borderWidth * 2);
+    tempCanvas.height = canvasSize.height + (padding * 2) + messageHeight + (borderWidth * 2);
+
+    // Fill with white background
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+
+    // Draw orange border
+    ctx.strokeStyle = "#ff6b35";
+    ctx.lineWidth = borderWidth;
+    ctx.strokeRect(borderWidth / 2, borderWidth / 2, tempCanvas.width - borderWidth, tempCanvas.height - borderWidth);
+
+    // Draw the canvas content
+    const canvasDataURL = fabricCanvas.toDataURL({ format: "png", quality: 1, multiplier: 1 });
+    const canvasImg = new Image();
+    
+    canvasImg.onload = () => {
+      ctx.drawImage(canvasImg, padding + borderWidth, padding + borderWidth);
+      
+      // Add selected message text below the canvas
+      if (selectedMessage) {
+        ctx.fillStyle = "#000000";
+        ctx.font = "bold 24px Inter, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(
+          selectedMessage,
+          tempCanvas.width / 2,
+          canvasSize.height + padding + borderWidth + 40
+        );
+      }
+
+      // Download the final image
+      const finalDataURL = tempCanvas.toDataURL("image/png");
+      const link = document.createElement("a");
+      link.download = "au-tfgbv-sticker.png";
+      link.href = finalDataURL;
+      link.click();
+      
+      toast.success("Sticker downloaded successfully!");
+    };
+    
+    canvasImg.src = canvasDataURL;
   };
 
   return (
@@ -177,7 +204,7 @@ export const StickerMaker = () => {
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
               <h1 className="text-2xl md:text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-                Bodyright Sticker Maker
+                AU-TFGBV Sticker Maker
               </h1>
               <p className="text-muted-foreground text-sm mt-1">Create stunning campaign stickers</p>
             </div>
@@ -223,50 +250,53 @@ export const StickerMaker = () => {
               <Toolbar
                 onImageUpload={() => fileInputRef.current?.click()}
                 onAddLogo={addLogo}
-                onAddText={() => addText("Your Text Here")}
+                onMessageSelect={handleMessageSelect}
                 onDeleteSelected={deleteSelected}
                 hasActiveObject={!!activeObject}
                 hasBackgroundImage={!!backgroundImage}
+                selectedMessage={selectedMessage}
               />
             </div>
           </div>
 
           {/* Canvas */}
           <div className="xl:col-span-6 order-3 xl:order-2">
-            <div className="bg-card rounded-xl shadow-elegant border border-border p-4 lg:p-6">
-              <div className="flex justify-center">
-                <div className="w-full max-w-full overflow-auto">
-                  <div className="border-2 border-dashed border-border rounded-lg p-4 bg-canvas-bg inline-block min-w-full">
-                    <canvas ref={canvasRef} className="rounded-lg shadow-sm max-w-full h-auto" />
+            <div className="space-y-4">
+              {/* Canvas Card with Orange Border */}
+              <div className="bg-card rounded-xl shadow-elegant border-4 border-primary p-4 lg:p-6">
+                <div className="flex justify-center">
+                  <div className="w-full max-w-full overflow-auto">
+                    <div className="border-2 border-dashed border-border rounded-lg p-4 bg-canvas-bg inline-block">
+                      <canvas ref={canvasRef} className="rounded-lg shadow-sm" style={{ maxWidth: '100%', height: 'auto' }} />
+                    </div>
                   </div>
                 </div>
               </div>
+              
+              {/* Selected Message Display */}
+              {selectedMessage && (
+                <div className="bg-card rounded-xl shadow-elegant border border-border p-4">
+                  <div className="text-center">
+                    <p className="text-sm text-muted-foreground mb-1">Selected Message:</p>
+                    <p className="text-lg font-semibold text-foreground">{selectedMessage}</p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
           {/* Properties Panel */}
           <div className="xl:col-span-3 order-2 xl:order-3">
             <div className="sticky top-24">
-              {activeObject ? (
-                <TextEditor
-                  activeObject={activeObject}
-                  onUpdate={(properties) => {
-                    if (fabricCanvas) {
-                      activeObject.set(properties);
-                      fabricCanvas.renderAll();
-                      saveCanvasState(fabricCanvas);
-                    }
-                  }}
-                />
-              ) : (
-                <div className="bg-card rounded-xl border border-border p-6 text-center">
-                  <div className="text-muted-foreground">
-                    <Type className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                    <h3 className="font-semibold mb-2">Select an Element</h3>
-                    <p className="text-sm">Click on text or images to edit their properties</p>
-                  </div>
+              <div className="bg-card rounded-xl border border-border p-6 text-center">
+                <div className="text-muted-foreground">
+                  <Type className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                  <h3 className="font-semibold mb-2">Element Properties</h3>
+                  <p className="text-sm">
+                    {activeObject ? "Use your mouse to resize and move elements on the canvas" : "Select an element to see options"}
+                  </p>
                 </div>
-              )}
+              </div>
             </div>
           </div>
         </div>
