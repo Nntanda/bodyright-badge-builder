@@ -15,7 +15,7 @@ export const StickerMaker = () => {
   const [historyIndex, setHistoryIndex] = useState(-1);
   const [backgroundImage, setBackgroundImage] = useState<string | null>(null);
   const [selectedMessage, setSelectedMessage] = useState<string | null>(null);
-  const [canvasSize, setCanvasSize] = useState({ width: 800, height: 600 });
+  const [canvasSize] = useState({ width: 600, height: 600 }); // Fixed size for professional design
 
   useEffect(() => {
     if (!canvasRef.current) return;
@@ -23,7 +23,7 @@ export const StickerMaker = () => {
     const canvas = new FabricCanvas(canvasRef.current, {
       width: canvasSize.width,
       height: canvasSize.height,
-      backgroundColor: "hsl(var(--canvas-bg))",
+      backgroundColor: "#ffffff",
     });
 
     setFabricCanvas(canvas);
@@ -81,31 +81,29 @@ export const StickerMaker = () => {
 
     const reader = new FileReader();
     reader.onload = (event) => {
-      const img = new Image();
-      img.onload = () => {
-        // Set canvas size to match image dimensions
-        const newSize = { width: img.width, height: img.height };
-        setCanvasSize(newSize);
+      FabricImage.fromURL(event.target?.result as string).then((fabricImg) => {
+        // Scale image to fit canvas while maintaining aspect ratio
+        const scale = Math.min(
+          canvasSize.width / fabricImg.width!,
+          canvasSize.height / fabricImg.height!
+        );
         
-        // Update fabric canvas dimensions
-        fabricCanvas.setDimensions(newSize);
-
-        FabricImage.fromURL(event.target?.result as string).then((fabricImg) => {
-          fabricImg.set({
-            left: 0,
-            top: 0,
-            selectable: false,
-            evented: false,
-          });
-
-          fabricCanvas.backgroundImage = fabricImg;
-          fabricCanvas.renderAll();
-          setBackgroundImage(event.target?.result as string);
-          saveCanvasState(fabricCanvas);
-          toast.success("Background image uploaded successfully!");
+        fabricImg.set({
+          left: (canvasSize.width - fabricImg.width! * scale) / 2,
+          top: (canvasSize.height - fabricImg.height! * scale) / 2,
+          scaleX: scale,
+          scaleY: scale,
+          selectable: true,
+          evented: true,
         });
-      };
-      img.src = event.target?.result as string;
+
+        fabricCanvas.add(fabricImg);
+        fabricCanvas.sendObjectToBack(fabricImg);
+        fabricCanvas.renderAll();
+        setBackgroundImage(event.target?.result as string);
+        saveCanvasState(fabricCanvas);
+        toast.success("Background image uploaded successfully!");
+      });
     };
     reader.readAsDataURL(file);
   };
@@ -117,10 +115,19 @@ export const StickerMaker = () => {
       img.set({
         left: 50,
         top: 50,
-        scaleX: 0.3,
-        scaleY: 0.3,
+        scaleX: 0.2,
+        scaleY: 0.2,
+        selectable: true,
+        evented: true,
+        hasControls: true,
+        hasBorders: true,
+        cornerSize: 10,
+        transparentCorners: false,
+        cornerColor: '#ff6b35',
+        borderColor: '#ff6b35',
       });
       fabricCanvas.add(img);
+      fabricCanvas.bringObjectToFront(img);
       fabricCanvas.setActiveObject(img);
       saveCanvasState(fabricCanvas);
       toast.success("Logo added to canvas!");
@@ -174,12 +181,12 @@ export const StickerMaker = () => {
       // Add selected message text below the canvas
       if (selectedMessage) {
         ctx.fillStyle = "#000000";
-        ctx.font = "bold 24px Inter, sans-serif";
+        ctx.font = "bold 32px Inter, sans-serif";
         ctx.textAlign = "center";
         ctx.fillText(
           selectedMessage,
           tempCanvas.width / 2,
-          canvasSize.height + padding + borderWidth + 40
+          canvasSize.height + padding + borderWidth + 45
         );
       }
 
@@ -266,8 +273,12 @@ export const StickerMaker = () => {
               <div className="bg-card rounded-xl shadow-elegant border-4 border-primary p-4 lg:p-6">
                 <div className="flex justify-center">
                   <div className="w-full max-w-full overflow-auto">
-                    <div className="border-2 border-dashed border-border rounded-lg p-4 bg-canvas-bg inline-block">
-                      <canvas ref={canvasRef} className="rounded-lg shadow-sm" style={{ maxWidth: '100%', height: 'auto' }} />
+                    <div className="border-2 border-dashed border-border rounded-lg p-4 bg-white inline-block">
+                      <canvas 
+                        ref={canvasRef} 
+                        className="rounded-lg shadow-sm" 
+                        style={{ width: '600px', height: '600px', maxWidth: '100%' }} 
+                      />
                     </div>
                   </div>
                 </div>
@@ -277,8 +288,8 @@ export const StickerMaker = () => {
               {selectedMessage && (
                 <div className="bg-card rounded-xl shadow-elegant border border-border p-4">
                   <div className="text-center">
-                    <p className="text-sm text-muted-foreground mb-1">Selected Message:</p>
-                    <p className="text-lg font-semibold text-foreground">{selectedMessage}</p>
+                    <p className="text-sm text-muted-foreground mb-2">Selected Message:</p>
+                    <p className="text-2xl font-bold text-foreground">{selectedMessage}</p>
                   </div>
                 </div>
               )}
