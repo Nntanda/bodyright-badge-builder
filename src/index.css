@@ -8,43 +8,48 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
+    --background: 218 26% 12%;
+    --foreground: 0 0% 98%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
+    --card: 218 26% 15%;
+    --card-foreground: 0 0% 98%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
+    --popover: 218 26% 15%;
+    --popover-foreground: 0 0% 98%;
 
-    --primary: 25 95% 53%;
-    --primary-foreground: 0 0% 98%;
-    --primary-glow: 33 100% 60%;
+    --primary: 50 100% 55%;
+    --primary-foreground: 218 26% 12%;
+    --primary-glow: 45 100% 60%;
 
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
+    --secondary: 218 26% 20%;
+    --secondary-foreground: 0 0% 98%;
 
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
+    --muted: 218 26% 18%;
+    --muted-foreground: 0 0% 63.9%;
 
-    --accent: 25 95% 53%;
-    --accent-foreground: 0 0% 9%;
+    --accent: 50 100% 55%;
+    --accent-foreground: 218 26% 12%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 25 95% 53%;
+    --border: 218 26% 25%;
+    --input: 218 26% 25%;
+    --ring: 50 100% 55%;
 
     --radius: 0.75rem;
 
-    /* Custom design tokens for Bodyright campaign */
-    --gradient-primary: linear-gradient(135deg, hsl(25, 95%, 53%), hsl(33, 100%, 60%));
-    --gradient-secondary: linear-gradient(135deg, hsl(0, 0%, 98%), hsl(0, 0%, 94%));
-    --gradient-hero: linear-gradient(135deg, hsl(25, 95%, 53%), hsl(33, 100%, 60%), hsl(45, 100%, 65%));
-    --shadow-glow: 0 0 40px hsl(25 95% 53% / 0.3);
-    --shadow-elegant: 0 10px 30px -10px hsl(0 0% 0% / 0.1);
+    /* Custom design tokens for AUGYO campaign */
+    --augyo-gold: 50 100% 55%;
+    --augyo-dark: 218 26% 12%;
+    --augyo-red: 6 78% 57%;
+    --augyo-orange: 14 88% 55%;
+    
+    --gradient-primary: linear-gradient(135deg, hsl(50, 100%, 55%), hsl(45, 100%, 60%));
+    --gradient-hero: linear-gradient(135deg, hsl(6, 78%, 57%), hsl(14, 88%, 55%));
+    --gradient-control: linear-gradient(135deg, hsl(6, 78%, 57%), hsl(14, 88%, 55%));
+    --shadow-glow: 0 0 40px hsl(50 100% 55% / 0.3);
+    --shadow-elegant: 0 10px 30px -10px hsl(0 0% 0% / 0.2);
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     
     /* Canvas specific */
@@ -70,18 +75,18 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 0 0% 3.9%;
+    --background: 0 0% 5%;
     --foreground: 0 0% 98%;
 
-    --card: 0 0% 3.9%;
+    --card: 0 0% 8%;
     --card-foreground: 0 0% 98%;
 
-    --popover: 0 0% 3.9%;
+    --popover: 0 0% 8%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 25 95% 53%;
+    --primary: 50 100% 55%;
     --primary-foreground: 0 0% 9%;
-    --primary-glow: 33 100% 60%;
+    --primary-glow: 45 100% 60%;
 
     --secondary: 0 0% 14.9%;
     --secondary-foreground: 0 0% 98%;
@@ -95,9 +100,9 @@ All colors MUST be HSL.
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 263 70% 50.4%;
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 50 100% 55%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
