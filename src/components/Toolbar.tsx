@@ -1,10 +1,9 @@
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+
 import { 
   Upload, 
   Image, 
-  MessageSquare, 
   Trash2,
   Sparkles
 } from "lucide-react";
@@ -20,10 +19,10 @@ interface ToolbarProps {
 }
 
 const messageOptions = [
-  "#No Excuse",
-  "#Stand we speak",
-  "#If Music has right,I too should",
-  "#My Photos,my rules"
+  "#NoExcuse",
+  "#StandWeSpeak", 
+  "#IfMusicHasRightsITooShould",
+  "#MyPhotosMyRules"
 ];
 
 export const Toolbar = ({
@@ -88,27 +87,26 @@ export const Toolbar = ({
                 Add AU-TFGBV Logo
               </Button>
 
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-primary flex items-center gap-2">
-                  <MessageSquare className="w-4 h-4" />
-                  Choose Message
+              <div className="space-y-3">
+                <label className="text-sm font-medium text-muted-foreground">
+                  Choose your hashtag
                 </label>
-                <Select onValueChange={onMessageSelect} value={selectedMessage || ""}>
-                  <SelectTrigger className="w-full border-primary/30 hover:border-primary/50">
-                    <SelectValue placeholder="Select a campaign message" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white border-primary/20">
-                    {messageOptions.map((message) => (
-                      <SelectItem 
-                        key={message} 
-                        value={message}
-                        className="hover:bg-primary/10 focus:bg-primary/10"
-                      >
-                        {message}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <div className="flex flex-wrap gap-2">
+                  {messageOptions.map((message) => (
+                    <Button
+                      key={message}
+                      onClick={() => onMessageSelect(message)}
+                      variant={selectedMessage === message ? "default" : "secondary"}
+                      className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
+                        selectedMessage === message 
+                          ? "bg-orange-500 text-white hover:bg-orange-600" 
+                          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                      }`}
+                    >
+                      {message}
+                    </Button>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
