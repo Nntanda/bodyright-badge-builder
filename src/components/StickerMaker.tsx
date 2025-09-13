@@ -81,29 +81,42 @@ export const StickerMaker = () => {
 
     const reader = new FileReader();
     reader.onload = (event) => {
-      FabricImage.fromURL(event.target?.result as string).then((fabricImg) => {
-        // Scale image to fit canvas while maintaining aspect ratio
-        const scale = Math.min(
-          canvasSize.width / fabricImg.width!,
-          canvasSize.height / fabricImg.height!
-        );
-        
-        fabricImg.set({
-          left: (canvasSize.width - fabricImg.width! * scale) / 2,
-          top: (canvasSize.height - fabricImg.height! * scale) / 2,
-          scaleX: scale,
-          scaleY: scale,
-          selectable: true,
-          evented: true,
-        });
+      const imgElement = new Image();
+      imgElement.crossOrigin = 'anonymous';
+      imgElement.onload = () => {
+        FabricImage.fromURL(event.target?.result as string, {
+          crossOrigin: 'anonymous'
+        }).then((fabricImg) => {
+          // Scale image to fit canvas while maintaining aspect ratio
+          const scale = Math.min(
+            canvasSize.width / fabricImg.width!,
+            canvasSize.height / fabricImg.height!
+          );
+          
+          fabricImg.set({
+            left: (canvasSize.width - fabricImg.width! * scale) / 2,
+            top: (canvasSize.height - fabricImg.height! * scale) / 2,
+            scaleX: scale,
+            scaleY: scale,
+            selectable: true,
+            evented: true,
+          });
 
-        fabricCanvas.add(fabricImg);
-        fabricCanvas.sendObjectToBack(fabricImg);
-        fabricCanvas.renderAll();
-        setBackgroundImage(event.target?.result as string);
-        saveCanvasState(fabricCanvas);
-        toast.success("Background image uploaded successfully!");
-      });
+          fabricCanvas.add(fabricImg);
+          fabricCanvas.sendObjectToBack(fabricImg);
+          fabricCanvas.renderAll();
+          setBackgroundImage(event.target?.result as string);
+          saveCanvasState(fabricCanvas);
+          toast.success("Background image uploaded successfully!");
+        }).catch((error) => {
+          console.error('Error loading background image:', error);
+          toast.error("Failed to load background image");
+        });
+      };
+      imgElement.onerror = () => {
+        toast.error("Failed to load background image");
+      };
+      imgElement.src = event.target?.result as string;
     };
     reader.readAsDataURL(file);
   };
@@ -111,27 +124,43 @@ export const StickerMaker = () => {
   const addLogo = () => {
     if (!fabricCanvas) return;
 
-    FabricImage.fromURL("/logoafri-removebg-preview.png").then((img) => {
-      img.set({
-        left: 50,
-        top: 50,
-        scaleX: 0.2,
-        scaleY: 0.2,
-        selectable: true,
-        evented: true,
-        hasControls: true,
-        hasBorders: true,
-        cornerSize: 10,
-        transparentCorners: false,
-        cornerColor: '#ff6b35',
-        borderColor: '#ff6b35',
+    // First check if the logo image exists
+    const logoImg = new Image();
+    logoImg.crossOrigin = 'anonymous';
+    logoImg.onload = () => {
+      FabricImage.fromURL("/logoafri-removebg-preview.png", {
+        crossOrigin: 'anonymous'
+      }).then((img) => {
+        img.set({
+          left: 50,
+          top: 50,
+          scaleX: 0.2,
+          scaleY: 0.2,
+          selectable: true,
+          evented: true,
+          hasControls: true,
+          hasBorders: true,
+          cornerSize: 10,
+          transparentCorners: false,
+          cornerColor: '#ff6b35',
+          borderColor: '#ff6b35',
+        });
+        fabricCanvas.add(img);
+        fabricCanvas.bringObjectToFront(img);
+        fabricCanvas.setActiveObject(img);
+        fabricCanvas.renderAll();
+        saveCanvasState(fabricCanvas);
+        toast.success("Logo added to canvas!");
+      }).catch((error) => {
+        console.error('Error loading logo:', error);
+        toast.error("Failed to load logo. Please check if the logo file exists.");
       });
-      fabricCanvas.add(img);
-      fabricCanvas.bringObjectToFront(img);
-      fabricCanvas.setActiveObject(img);
-      saveCanvasState(fabricCanvas);
-      toast.success("Logo added to canvas!");
-    });
+    };
+    logoImg.onerror = () => {
+      console.error('Logo image not found at /logoafri-removebg-preview.png');
+      toast.error("Logo file not found. Please check if the logo exists in the public folder.");
+    };
+    logoImg.src = "/logoafri-removebg-preview.png";
   };
 
   const handleMessageSelect = (message: string) => {
