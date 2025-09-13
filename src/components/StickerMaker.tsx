@@ -4,7 +4,7 @@ import { Toolbar } from "./Toolbar";
 import { TextEditor } from "./TextEditor";
 import { toast } from "sonner";
 import { Button } from "./ui/button";
-import { Download, Undo, Redo, Type, Upload } from "lucide-react";
+import { Download, Undo, Redo, Type } from "lucide-react";
 
 export const StickerMaker = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -81,20 +81,28 @@ export const StickerMaker = () => {
 
     const reader = new FileReader();
     reader.onload = (event) => {
-      const imageUrl = event.target?.result as string;
-      
-      // Set the image as canvas background
-      fabricCanvas.setBackgroundImage(imageUrl, () => {
+      FabricImage.fromURL(event.target?.result as string).then((fabricImg) => {
+        // Scale image to fit canvas while maintaining aspect ratio
+        const scale = Math.min(
+          canvasSize.width / fabricImg.width!,
+          canvasSize.height / fabricImg.height!
+        );
+        
+        fabricImg.set({
+          left: (canvasSize.width - fabricImg.width! * scale) / 2,
+          top: (canvasSize.height - fabricImg.height! * scale) / 2,
+          scaleX: scale,
+          scaleY: scale,
+          selectable: true,
+          evented: true,
+        });
+
+        fabricCanvas.add(fabricImg);
+        fabricCanvas.sendObjectToBack(fabricImg);
         fabricCanvas.renderAll();
-        setBackgroundImage(imageUrl);
+        setBackgroundImage(event.target?.result as string);
         saveCanvasState(fabricCanvas);
         toast.success("Background image uploaded successfully!");
-      }, {
-        // Scale and position the background to cover the entire canvas
-        scaleX: canvasSize.width / 1000, // Assuming reasonable image dimensions
-        scaleY: canvasSize.height / 1000,
-        originX: 'left',
-        originY: 'top'
       });
     };
     reader.readAsDataURL(file);
@@ -142,21 +150,57 @@ export const StickerMaker = () => {
   const downloadSticker = () => {
     if (!fabricCanvas) return;
 
-    // Export the canvas directly as it now contains the background image
-    const dataURL = fabricCanvas.toDataURL({
-      format: "png",
-      quality: 1,
-      multiplier: 2, // Higher resolution for better quality
-      width: canvasSize.width,
-      height: canvasSize.height
-    });
+    // Create a temporary canvas with the card and border
+    const tempCanvas = document.createElement("canvas");
+    const ctx = tempCanvas.getContext("2d");
+    if (!ctx) return;
+
+    const padding = 20;
+    const messageHeight = selectedMessage ? 60 : 0;
+    const borderWidth = 4;
     
-    const link = document.createElement("a");
-    link.download = "au-tfgbv-sticker.png";
-    link.href = dataURL;
-    link.click();
+    tempCanvas.width = canvasSize.width + (padding * 2) + (borderWidth * 2);
+    tempCanvas.height = canvasSize.height + (padding * 2) + messageHeight + (borderWidth * 2);
+
+    // Fill with white background
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+
+    // Draw orange border
+    ctx.strokeStyle = "#ff6b35";
+    ctx.lineWidth = borderWidth;
+    ctx.strokeRect(borderWidth / 2, borderWidth / 2, tempCanvas.width - borderWidth, tempCanvas.height - borderWidth);
+
+    // Draw the canvas content
+    const canvasDataURL = fabricCanvas.toDataURL({ format: "png", quality: 1, multiplier: 1 });
+    const canvasImg = new Image();
     
-    toast.success("Sticker downloaded successfully!");
+    canvasImg.onload = () => {
+      ctx.drawImage(canvasImg, padding + borderWidth, padding + borderWidth);
+      
+      // Add selected message text below the canvas
+      if (selectedMessage) {
+        ctx.fillStyle = "#000000";
+        ctx.font = "bold 32px Inter, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(
+          selectedMessage,
+          tempCanvas.width / 2,
+          canvasSize.height + padding + borderWidth + 45
+        );
+      }
+
+      // Download the final image
+      const finalDataURL = tempCanvas.toDataURL("image/png");
+      const link = document.createElement("a");
+      link.download = "au-tfgbv-sticker.png";
+      link.href = finalDataURL;
+      link.click();
+      
+      toast.success("Sticker downloaded successfully!");
+    };
+    
+    canvasImg.src = canvasDataURL;
   };
 
   return (
@@ -225,31 +269,30 @@ export const StickerMaker = () => {
           {/* Canvas */}
           <div className="xl:col-span-6 order-3 xl:order-2">
             <div className="space-y-4">
-              {/* Canvas Container */}
-              <div className="bg-card rounded-xl shadow-elegant border border-border p-4 lg:p-6">
+              {/* Canvas Card with Orange Border */}
+              <div className="bg-card rounded-xl shadow-elegant border-4 border-primary p-4 lg:p-6">
                 <div className="flex justify-center">
-                  <div className="relative">
-                    <canvas 
-                      ref={canvasRef} 
-                      className="border-2 border-primary rounded-lg shadow-lg" 
-                      style={{ 
-                        width: `${canvasSize.width}px`, 
-                        height: `${canvasSize.height}px`,
-                        maxWidth: '100%',
-                        maxHeight: '70vh'
-                      }} 
-                    />
-                    {!backgroundImage && (
-                      <div className="absolute inset-0 flex items-center justify-center bg-gray-50/80 rounded-lg border-2 border-dashed border-gray-300">
-                        <div className="text-center text-gray-500">
-                          <Upload className="w-12 h-12 mx-auto mb-2 opacity-50" />
-                          <p className="text-sm font-medium">Upload a background image to start</p>
-                        </div>
-                      </div>
-                    )}
+                  <div className="w-full max-w-full overflow-auto">
+                    <div className="border-2 border-dashed border-border rounded-lg p-4 bg-white inline-block">
+                      <canvas 
+                        ref={canvasRef} 
+                        className="rounded-lg shadow-sm" 
+                        style={{ width: '600px', height: '600px', maxWidth: '100%' }} 
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
+              
+              {/* Selected Message Display */}
+              {selectedMessage && (
+                <div className="bg-card rounded-xl shadow-elegant border border-border p-4">
+                  <div className="text-center">
+                    <p className="text-sm text-muted-foreground mb-2">Selected Message:</p>
+                    <p className="text-2xl font-bold text-foreground">{selectedMessage}</p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
