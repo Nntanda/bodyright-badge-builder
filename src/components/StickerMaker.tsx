@@ -111,7 +111,7 @@ export const StickerMaker = () => {
   const addLogo = () => {
     if (!fabricCanvas) return;
 
-    FabricImage.fromURL("/lovable-uploads/8366b68a-a4bc-4496-86d3-a9fa64589a61.png").then((img) => {
+    FabricImage.fromURL("/logoafri-removebg-preview.png").then((img) => {
       img.set({
         left: 50,
         top: 50,
