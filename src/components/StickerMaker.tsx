@@ -4,7 +4,7 @@ import { Toolbar } from "./Toolbar";
 import { TextEditor } from "./TextEditor";
 import { toast } from "sonner";
 import { Button } from "./ui/button";
-import { Download, Undo, Redo, Type } from "lucide-react";
+import { Download, Undo, Redo, Type, MessageSquare } from "lucide-react";
 
 export const StickerMaker = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -204,16 +204,16 @@ export const StickerMaker = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-secondary to-background">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b bg-background/80 backdrop-blur-sm sticky top-0 z-50">
+      <header className="border-b border-primary/20 bg-white shadow-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
-              <h1 className="text-2xl md:text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+              <h1 className="text-2xl md:text-3xl font-bold text-primary">
                 AU-TFGBV Sticker Maker
               </h1>
-              <p className="text-muted-foreground text-sm mt-1">Create stunning campaign stickers</p>
+              <p className="text-muted-foreground text-sm mt-1">Create stunning campaign stickers with messages</p>
             </div>
             
             <div className="flex flex-wrap items-center gap-2">
@@ -222,7 +222,7 @@ export const StickerMaker = () => {
                 size="sm"
                 onClick={undo}
                 disabled={historyIndex <= 0}
-                className="transition-all duration-200 hover:shadow-glow"
+                className="border-primary/30 text-primary hover:bg-primary/10"
               >
                 <Undo className="w-4 h-4" />
                 <span className="hidden sm:inline ml-2">Undo</span>
@@ -232,17 +232,18 @@ export const StickerMaker = () => {
                 size="sm"
                 onClick={redo}
                 disabled={historyIndex >= canvasHistory.length - 1}
-                className="transition-all duration-200 hover:shadow-glow"
+                className="border-primary/30 text-primary hover:bg-primary/10"
               >
                 <Redo className="w-4 h-4" />
                 <span className="hidden sm:inline ml-2">Redo</span>
               </Button>
               <Button
                 onClick={downloadSticker}
-                className="bg-primary text-primary-foreground"
+                className="bg-primary text-white hover:bg-primary/90 shadow-lg"
+                size="default"
               >
                 <Download className="w-4 h-4 mr-2" />
-                Download
+                Download Sticker
               </Button>
             </div>
           </div>
@@ -270,13 +271,13 @@ export const StickerMaker = () => {
           <div className="xl:col-span-6 order-3 xl:order-2">
             <div className="space-y-4">
               {/* Canvas Card with Orange Border */}
-              <div className="bg-card rounded-xl shadow-elegant border-4 border-primary p-4 lg:p-6">
+              <div className="bg-white rounded-xl shadow-lg border-4 border-primary p-4 lg:p-6">
                 <div className="flex justify-center">
                   <div className="w-full max-w-full overflow-auto">
-                    <div className="border-2 border-dashed border-border rounded-lg p-4 bg-white inline-block">
+                    <div className="border-2 border-dashed border-primary/30 rounded-lg p-4 bg-gray-50 inline-block">
                       <canvas 
                         ref={canvasRef} 
-                        className="rounded-lg shadow-sm" 
+                        className="rounded-lg shadow-sm bg-white" 
                         style={{ width: '600px', height: '600px', maxWidth: '100%' }} 
                       />
                     </div>
@@ -286,10 +287,16 @@ export const StickerMaker = () => {
               
               {/* Selected Message Display */}
               {selectedMessage && (
-                <div className="bg-card rounded-xl shadow-elegant border border-border p-4">
+                <div className="bg-white rounded-xl shadow-lg border-2 border-primary/20 p-6">
                   <div className="text-center">
-                    <p className="text-sm text-muted-foreground mb-2">Selected Message:</p>
-                    <p className="text-2xl font-bold text-foreground">{selectedMessage}</p>
+                    <div className="flex items-center justify-center gap-2 mb-3">
+                      <MessageSquare className="w-5 h-5 text-primary" />
+                      <p className="text-sm text-primary font-semibold">Message Selected:</p>
+                    </div>
+                    <p className="text-xl font-bold text-foreground bg-primary/5 px-4 py-2 rounded-lg border border-primary/20">
+                      {selectedMessage}
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-2">This message will be attached to your downloaded sticker</p>
                   </div>
                 </div>
               )}
@@ -299,10 +306,10 @@ export const StickerMaker = () => {
           {/* Properties Panel */}
           <div className="xl:col-span-3 order-2 xl:order-3">
             <div className="sticky top-24">
-              <div className="bg-card rounded-xl border border-border p-6 text-center">
+              <div className="bg-white rounded-xl border border-primary/20 shadow-lg p-6 text-center">
                 <div className="text-muted-foreground">
-                  <Type className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                  <h3 className="font-semibold mb-2">Element Properties</h3>
+                  <Type className="w-12 h-12 mx-auto mb-4 text-primary/30" />
+                  <h3 className="font-semibold mb-2 text-primary">Element Properties</h3>
                   <p className="text-sm">
                     {activeObject ? "Use your mouse to resize and move elements on the canvas" : "Select an element to see options"}
                   </p>

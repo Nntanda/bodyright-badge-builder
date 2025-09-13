@@ -8,54 +8,55 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 218 26% 12%;
-    --foreground: 0 0% 98%;
+    /* Orange and White theme for create page */
+    --background: 0 0% 100%;
+    --foreground: 24 45% 10%;
 
-    --card: 218 26% 15%;
-    --card-foreground: 0 0% 98%;
+    --card: 0 0% 100%;
+    --card-foreground: 24 45% 10%;
 
-    --popover: 218 26% 15%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 24 45% 10%;
 
-    --primary: 50 100% 55%;
-    --primary-foreground: 218 26% 12%;
-    --primary-glow: 45 100% 60%;
+    --primary: 24 95% 53%;  /* Orange */
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 31 100% 65%;
 
-    --secondary: 218 26% 20%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 24 95% 97%;
+    --secondary-foreground: 24 45% 10%;
 
-    --muted: 218 26% 18%;
-    --muted-foreground: 0 0% 63.9%;
+    --muted: 24 95% 95%;
+    --muted-foreground: 24 5% 64%;
 
-    --accent: 50 100% 55%;
-    --accent-foreground: 218 26% 12%;
+    --accent: 24 95% 53%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 218 26% 25%;
-    --input: 218 26% 25%;
-    --ring: 50 100% 55%;
+    --border: 24 95% 90%;
+    --input: 24 95% 90%;
+    --ring: 24 95% 53%;
 
     --radius: 0.75rem;
 
-    /* Custom design tokens for AUGYO campaign */
+    /* Custom design tokens for AU-TFGBV campaign */
     --augyo-gold: 50 100% 55%;
-    --augyo-dark: 218 26% 12%;
+    --augyo-dark: 24 45% 10%;
     --augyo-red: 6 78% 57%;
-    --augyo-orange: 14 88% 55%;
+    --augyo-orange: 24 95% 53%;
     
-    --gradient-primary: linear-gradient(135deg, hsl(50, 100%, 55%), hsl(45, 100%, 60%));
-    --gradient-hero: linear-gradient(135deg, hsl(6, 78%, 57%), hsl(14, 88%, 55%));
-    --gradient-control: linear-gradient(135deg, hsl(6, 78%, 57%), hsl(14, 88%, 55%));
-    --shadow-glow: 0 0 40px hsl(50 100% 55% / 0.3);
-    --shadow-elegant: 0 10px 30px -10px hsl(0 0% 0% / 0.2);
+    --gradient-primary: linear-gradient(135deg, hsl(24, 95%, 53%), hsl(31, 100%, 65%));
+    --gradient-hero: linear-gradient(135deg, hsl(24, 95%, 53%), hsl(31, 100%, 65%));
+    --gradient-control: linear-gradient(135deg, hsl(24, 95%, 53%), hsl(31, 100%, 65%));
+    --shadow-glow: 0 0 40px hsl(24 95% 53% / 0.3);
+    --shadow-elegant: 0 10px 30px -10px hsl(24 95% 53% / 0.15);
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     
     /* Canvas specific */
-    --canvas-bg: 0 0% 98%;
-    --toolbar-bg: 0 0% 97%;
-    --tool-hover: 25 95% 53% / 0.1;
+    --canvas-bg: 0 0% 100%;
+    --toolbar-bg: 0 0% 99%;
+    --tool-hover: 24 95% 53% / 0.1;
 
     --sidebar-background: 0 0% 98%;
 
@@ -75,34 +76,35 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 0 0% 5%;
+    /* Dark mode keeps orange accent but with dark background */
+    --background: 24 45% 8%;
     --foreground: 0 0% 98%;
 
-    --card: 0 0% 8%;
+    --card: 24 45% 10%;
     --card-foreground: 0 0% 98%;
 
-    --popover: 0 0% 8%;
+    --popover: 24 45% 10%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 50 100% 55%;
-    --primary-foreground: 0 0% 9%;
-    --primary-glow: 45 100% 60%;
+    --primary: 24 95% 53%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 31 100% 65%;
 
-    --secondary: 0 0% 14.9%;
+    --secondary: 24 45% 15%;
     --secondary-foreground: 0 0% 98%;
 
-    --muted: 0 0% 14.9%;
+    --muted: 24 45% 15%;
     --muted-foreground: 0 0% 63.9%;
 
-    --accent: 0 0% 14.9%;
+    --accent: 24 45% 15%;
     --accent-foreground: 0 0% 98%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 20%;
-    --input: 0 0% 20%;
-    --ring: 50 100% 55%;
+    --border: 24 45% 20%;
+    --input: 24 45% 20%;
+    --ring: 24 95% 53%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
